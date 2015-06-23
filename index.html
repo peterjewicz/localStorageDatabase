@@ -1,0 +1,120 @@
+<script>
+
+	 var dataBase = (function(){
+
+			var createDatabase = function(name, size, options) //SETS UP AND ADDS A DATABASE INSTANCE TO LOCAL STORAGE
+			 	{
+			 		// if(!localStorage.name)
+			 		// {
+				 		var loopVar = 0;
+				 		var dataBaseArray = new Object()
+				 		var options = Array.prototype.slice.call(arguments, 0);
+				 		options.shift(); options.shift(); //Removed the first two elements which is table name and size
+
+				 		while(loopVar < size)
+				 		{
+				 			if(!options[loopVar])  //If values aren't set for larger sizes then use a default
+				 			{	
+				 				var field = "field" + loopVar;
+				 				dataBaseArray[field] = new Array();
+				 			}
+				 			else
+				 			{
+				 			dataBaseArray[options[loopVar]] = new Array();
+				 			}
+				 			loopVar++;
+
+				 		}
+				 		localStorage.setItem(name, JSON.stringify(dataBaseArray));
+
+			 		// }	
+			 		// else
+			 		// {
+			 		// 	alert("Database Already Exists") SHOULD BE CONSOLE.WARN
+			 		// }
+			 	}
+			var setValues = function(table, values) //Set the values in a database row, if no value is set then it leaves it as nullllll
+				{
+					var values = Array.prototype.slice.call(arguments, 0);
+					var table = values.shift(); 
+					var retrievedObject = JSON.parse(localStorage.getItem(table));
+					var loopVar = 0;
+					
+
+					while(loopVar < values.length)
+					{
+						//console.log(values[loopVar]);
+						for(var property in values[loopVar])
+						{
+							
+							value = values[loopVar][property]
+							//console.log(value);
+							retrievedObject[property].push(value);
+						} 
+						loopVar++;
+					}
+
+					// for(var property in retrievedObject) // To DO: ADD NULL IF NOT ENOUGH VALUES
+					// {
+					// 	if( retrievedObject.hasOwnProperty(property) ) {
+					// 		retrievedObject[property].push(values[loopVar]);
+					// 		loopVar++;
+					// 	}
+					// }
+						console.log(table);
+						console.log(retrievedObject);
+						localStorage.setItem(table, JSON.stringify(retrievedObject));
+						/// TO DO: CHECK IF ROW EXISTS AND CONSOLE.WARN IF NOT
+				}
+			function _checkTableIntegrity()
+			{
+				//THIS FUNCTION CHECKS TO ENSURE THAT EACH ROW IN TABLE HAS THE SAME AMOUNT.
+				//IF SOMEONE ENETERS A ROW WITH A VALUE MISSING THEN THAT DATA WILL END UP BEHIND
+				//THIS FUNCTION SHOULD BE CALLED ANYTIME "setValues()" IS AND ADDS A NULL VALUE
+				//TO ANY FIELD THE USER DIDNT
+			}
+
+			var newField = function(table, row)
+				{
+					//TO DO: CHECK IF ROW ALREADY EXISTS AND ENSURE TABLR EXISTS OR CLOSE AND THROW ERROR
+					var retrievedObject = JSON.parse(localStorage.getItem(table));
+						retrievedObject[row] = "";
+						localStorage.setItem(table, JSON.stringify(retrievedObject));
+				}
+			var returnTableToLocal = function(table)
+			{
+				return JSON.parse(localStorage.getItem(table));
+			}
+
+			var getTableValue = function(table, row)
+			{
+				//TO DO: Implement check to see if table and row exists
+				var retrievedObject = JSON.parse(localStorage.getItem(table));
+				return retrievedObject[row]
+			}
+
+
+
+			   return {
+			    create: createDatabase,
+			    setValues: setValues,
+			    addFile: newField,
+			    getTable: returnTableToLocal,
+			    readValue: getTableValue,
+			  };
+		
+
+	})()
+
+
+	dataBase.create("deadlifts", 3, "Id", "date", "amount");
+	
+	dataBase.setValues("deadlifts", {Id:2}, {date: 3}, {amount:4});
+	//dataBase.setValues("deadlifts", 4, 5, 6);
+	var retrievedObject = localStorage.getItem('deadlifts');
+	console.log('retrievedObject: ', JSON.parse(retrievedObject));
+
+
+	
+
+</script>
