@@ -7,7 +7,8 @@
 			 		// if(!localStorage.name)
 			 		// {
 				 		var loopVar = 0;
-				 		var dataBaseArray = new Object()
+				 		var dataBaseArray = new Object();
+
 				 		var options = Array.prototype.slice.call(arguments, 0);
 				 		options.shift(); options.shift(); //Removed the first two elements which is table name and size
 
@@ -40,32 +41,25 @@
 					var retrievedObject = JSON.parse(localStorage.getItem(table));
 					var loopVar = 0;
 					
-
+				
 					while(loopVar < values.length)
 					{
-						//console.log(values[loopVar]);
+						// console.log(values); //array of objects
 						for(var property in values[loopVar])
 						{
-							
+							// displays the property name console.log(property);
 							value = values[loopVar][property]
-							//console.log(value);
-							retrievedObject[property].push(value);
+							// the value of the propery console.log(value);
+							retrievedObject[property].push(value); //pushes the value to the property in the object
 						} 
 						loopVar++;
 					}
 
-					// for(var property in retrievedObject) // To DO: ADD NULL IF NOT ENOUGH VALUES
-					// {
-					// 	if( retrievedObject.hasOwnProperty(property) ) {
-					// 		retrievedObject[property].push(values[loopVar]);
-					// 		loopVar++;
-					// 	}
-					// }
-						console.log(table);
-						console.log(retrievedObject);
-						localStorage.setItem(table, JSON.stringify(retrievedObject));
+					localStorage.setItem(table, JSON.stringify(retrievedObject));
 						/// TO DO: CHECK IF ROW EXISTS AND CONSOLE.WARN IF NOT
 				}
+
+
 			function _checkTableIntegrity()
 			{
 				//THIS FUNCTION CHECKS TO ENSURE THAT EACH ROW IN TABLE HAS THE SAME AMOUNT.
@@ -107,11 +101,12 @@
 	})()
 
 
-	dataBase.create("deadlifts", 3, "Id", "date", "amount");
+	dataBase.create("bench", 4, "Id", "date", "amount", "fun");
 	
-	dataBase.setValues("deadlifts", {Id:2}, {date: 3}, {amount:4});
-	//dataBase.setValues("deadlifts", 4, 5, 6);
-	var retrievedObject = localStorage.getItem('deadlifts');
+	dataBase.setValues("bench", {Id:2}, {date: 3}, {amount:4}, {fun: 6});
+	dataBase.setValues("bench", {Id:3}, {date: 4}, {amount:5}, {fun: 7});
+
+	var retrievedObject = localStorage.getItem('bench');
 	console.log('retrievedObject: ', JSON.parse(retrievedObject));
 
 
