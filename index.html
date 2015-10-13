@@ -2,31 +2,53 @@
 
 	 var dataBase = (function(){
 
-			var createDatabase = function(name, size, options) //SETS UP AND ADDS A DATABASE INSTANCE TO LOCAL STORAGE
+	 		var createDatabase = function(name) //creats database of name
+	 		{
+
+	 			if(localStorage.getItem(name))
+	 			{
+	 				console.error("Database of that name already exists!");
+	 				return;
+	 			}
+	 			var nameArray = new Object()
+	 			localStorage.setItem(name, JSON.stringify(nameArray));
+	 			
+	 			
+	 		}
+
+			var newTable = function(database, name, options) //SETS UP AND ADDS A TABLE TO DATABASE INSTANCE IN LOCAL STORAGE
 			 	{
-			 		// if(!localStorage.name)
-			 		// {
+			 		
 				 		var loopVar = 0;
 				 		var dataBaseArray = new Object();
 
 				 		var options = Array.prototype.slice.call(arguments, 0);
-				 		options.shift(); options.shift(); //Removed the first two elements which is table name and size
+				 		var database = options.shift();//Removed the first thre elements which is database that is being called
+				 		var tableName = options.shift(); //assign table name and remove from list of options
+				 		size = options.length
+				 		
+
+				 		var retrievedObject = localStorage.getItem(database);
+				 		retrievedObject = JSON.parse(retrievedObject);
+				 		
+				 		
+				 		retrievedObject[tableName] = Object();
+
+				 		
+				 		loopVar = 0
 
 				 		while(loopVar < size)
 				 		{
-				 			if(!options[loopVar])  //If values aren't set for larger sizes then use a default
-				 			{	
-				 				var field = "field" + loopVar;
-				 				dataBaseArray[field] = new Array();
-				 			}
-				 			else
-				 			{
-				 			dataBaseArray[options[loopVar]] = new Array();
-				 			}
+				 			
+				 			var prop = options[loopVar];
+				 	
+				 			retrievedObject[tableName][prop] = Array();
 				 			loopVar++;
-
 				 		}
-				 		localStorage.setItem(name, JSON.stringify(dataBaseArray));
+				 		
+				 		localStorage.setItem(database, JSON.stringify(retrievedObject));
+				 		 return;
+	 					
 
 			 		// }	
 			 		// else
@@ -34,11 +56,13 @@
 			 		// 	alert("Database Already Exists") SHOULD BE CONSOLE.WARN
 			 		// }
 			 	}
-			var setValues = function(table, values) //Set the values in a database row, if no value is set then it leaves it as nullllll
+			var setValues = function(database, table, values) //Set the values in a database row, if no value is set then it leaves it as nullllll
 				{
 					var values = Array.prototype.slice.call(arguments, 0);
+					var database = values.shift();
 					var table = values.shift(); 
-					var retrievedObject = JSON.parse(localStorage.getItem(table));
+					
+					var retrievedObject = JSON.parse(localStorage.getItem(database));
 					var loopVar = 0;
 					
 				
@@ -47,15 +71,17 @@
 						// console.log(values); //array of objects
 						for(var property in values[loopVar])
 						{
-							// displays the property name console.log(property);
-							value = values[loopVar][property]
-							// the value of the propery console.log(value);
-							retrievedObject[property].push(value); //pushes the value to the property in the object
+							// displays the property name  console.log(property);
+						
+							value = values[loopVar][property]// the value of the propery 
+							
+							retrievedObject[table][property].push(value);
+							//retrievedObject[property].push(value); //pushes the value to the property in the object
 						} 
 						loopVar++;
 					}
-
-					localStorage.setItem(table, JSON.stringify(retrievedObject));
+					
+					localStorage.setItem(database, JSON.stringify(retrievedObject));
 						/// TO DO: CHECK IF ROW EXISTS AND CONSOLE.WARN IF NOT
 				}
 
@@ -91,6 +117,7 @@
 
 			   return {
 			    create: createDatabase,
+			    newTable: newTable,
 			    setValues: setValues,
 			    addFile: newField,
 			    getTable: returnTableToLocal,
@@ -100,14 +127,14 @@
 
 	})()
 
+	 //dataBase.create("workouts");  //creates an object(database) with the given name
+	 //dataBase.newTable("workouts" ,"bench", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
 
-	dataBase.create("bench", 4, "Id", "date", "amount", "fun");
-	
-	dataBase.setValues("bench", {Id:2}, {date: 3}, {amount:4}, {fun: 6});
-	dataBase.setValues("bench", {Id:3}, {date: 4}, {amount:5}, {fun: 7});
+	//dataBase.setValues("workouts", "shoulderPress", {date:1}, {weight: 250}, {reps:4}); // sets values in table - sent in an {attribute:value} format
 
-	var retrievedObject = localStorage.getItem('bench');
-	console.log('retrievedObject: ', JSON.parse(retrievedObject));
+	var retrievedObject = localStorage.getItem("workouts");
+				 		retrievedObject = JSON.parse(retrievedObject);
+				 		console.log(retrievedObject);
 
 
 	
