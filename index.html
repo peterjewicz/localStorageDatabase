@@ -49,13 +49,7 @@
 				 		
 				 		localStorage.setItem(database, JSON.stringify(retrievedObject));
 				 		 return;
-	 					
 
-			 		// }	
-			 		// else
-			 		// {
-			 		// 	alert("Database Already Exists") SHOULD BE CONSOLE.WARN
-			 		// }
 			 	}
 			var setValues = function(database, table, values) //Set the values in a database row, if no value is set then it leaves it as nullllll
 				{
@@ -124,6 +118,55 @@
 				else{return true;}
 			}
 
+			var getToday = function(database, table) //table is optional 
+			{
+				var todayItem = new Object()
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1; //January is 0!
+				var yy = today.getFullYear();
+				today = mm + "/" + dd + "/" + yy;
+
+
+				var retrievedObject = localStorage.getItem(database);
+				retrievedObject = JSON.parse(retrievedObject);
+
+				for(var property in retrievedObject)//itterates through tables
+				{
+					
+					
+				
+					// for(var tablePropery in retrievedObject[property] )//itterates through table properties
+					// {
+					// 	console.log(tablePropery);
+					// }
+					
+					var dateArray = retrievedObject[property].date;
+
+					var arraySize = dateArray.length
+					for(var x = 0; x < arraySize; x++)
+					{
+						if(dateArray[x] == today)
+						{
+							if(!todayItem[property]);
+							{
+								todayItem[property] = new Object();
+								for(var tablePropery in retrievedObject[property] )//itterates through table properties
+								{
+
+									todayItem[property][tablePropery] = Array();
+								}
+						
+							}
+
+						}
+						
+					}	
+				}			
+				console.log(todayItem);
+				return;
+			}
+
 
 
 			   return {
@@ -134,17 +177,20 @@
 			    getTable: returnTableToLocal,
 			    readValue: getTableValue,
 			    checkTable: checkTableExists,
+			    today: getToday,
 			  };
 		
 
 	})()
 
-	 //dataBase.create("workouts");  //creates an object(database) with the given name
-	 //dataBase.newTable("workouts" ,"bench", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
+	//  dataBase.create("workouts");  //creates an object(database) with the given name
+	//  dataBase.newTable("workouts" ,"deads", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
 
-	//dataBase.setValues("workouts", "shoulderPress", {date:1}, {weight: 250}, {reps:4}); // sets values in table - sent in an {attribute:value} format
-	// test = dataBase.checkTable('workouts', 'benchs');
+	//dataBase.setValues("workouts", "deads", {date:"10/18/2015"}, {weight: 250}, {reps:4}); // sets values in table - sent in an {attribute:value} format
+	//  test = dataBase.checkTable('workouts', 'benchs');
 
+
+	var today = dataBase.today('workouts')
 	var retrievedObject = localStorage.getItem("workouts");
 				 		retrievedObject = JSON.parse(retrievedObject);
 				 		console.log(retrievedObject);
