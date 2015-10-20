@@ -118,6 +118,54 @@
 				else{return true;}
 			}
 
+			var getByDate = function(database, date)
+			{
+				var todayItem = new Object()
+				
+				var retrievedObject = localStorage.getItem(database);
+				retrievedObject = JSON.parse(retrievedObject);
+
+				for(var property in retrievedObject)//itterates through tables
+				{
+					
+					
+					var dateArray = retrievedObject[property].date;
+
+					var arraySize = dateArray.length
+
+					for(var x = 0; x < arraySize; x++)
+					{
+						if(dateArray[x] == date)
+						{
+							
+							if(!todayItem[property])
+							{
+								todayItem[property] = new Object();
+								for(var tablePropery in retrievedObject[property] )//itterates through table properties
+								{
+
+									todayItem[property][tablePropery] = Array();
+									
+								}
+
+						
+							}
+
+							for(var tablePropery in retrievedObject[property] )//itterates through table properties
+							{
+
+								
+									todayItem[property][tablePropery].push(retrievedObject[property][tablePropery][x]); // say that 10 times fast
+							}
+
+						}
+						
+					}	
+				}			
+				return todayItem;
+			}
+			
+
 			var getToday = function(database, table) //table is optional 
 			{
 				var todayItem = new Object()
@@ -135,7 +183,7 @@
 				{
 					
 					
-				
+					
 					// for(var tablePropery in retrievedObject[property] )//itterates through table properties
 					// {
 					// 	console.log(tablePropery);
@@ -144,27 +192,37 @@
 					var dateArray = retrievedObject[property].date;
 
 					var arraySize = dateArray.length
+
 					for(var x = 0; x < arraySize; x++)
 					{
 						if(dateArray[x] == today)
 						{
-							if(!todayItem[property]);
+							
+							if(!todayItem[property])
 							{
 								todayItem[property] = new Object();
 								for(var tablePropery in retrievedObject[property] )//itterates through table properties
 								{
 
 									todayItem[property][tablePropery] = Array();
+									
 								}
+
 						
+							}
+
+							for(var tablePropery in retrievedObject[property] )//itterates through table properties
+							{
+
+								
+									todayItem[property][tablePropery].push(retrievedObject[property][tablePropery][x]); // say that 10 times fast
 							}
 
 						}
 						
 					}	
 				}			
-				console.log(todayItem);
-				return;
+				return todayItem;
 			}
 
 
@@ -178,6 +236,7 @@
 			    readValue: getTableValue,
 			    checkTable: checkTableExists,
 			    today: getToday,
+			    getDate: getByDate,
 			  };
 		
 
@@ -186,11 +245,12 @@
 	//  dataBase.create("workouts");  //creates an object(database) with the given name
 	//  dataBase.newTable("workouts" ,"deads", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
 
-	//dataBase.setValues("workouts", "deads", {date:"10/18/2015"}, {weight: 250}, {reps:4}); // sets values in table - sent in an {attribute:value} format
+	//dataBase.setValues("workouts", "deads", {date:"10/19/2015"}, {weight: 255}, {reps:5}); // sets values in table - sent in an {attribute:value} format
 	//  test = dataBase.checkTable('workouts', 'benchs');
 
 
 	var today = dataBase.today('workouts')
+	console.log(today);
 	var retrievedObject = localStorage.getItem("workouts");
 				 		retrievedObject = JSON.parse(retrievedObject);
 				 		console.log(retrievedObject);
