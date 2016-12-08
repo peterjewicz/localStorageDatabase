@@ -130,34 +130,52 @@
 			}
 
 
-
-			database.newField = function(table, row)
+			/**
+			* Adds a new field to a table and populates it with null values
+			* @param string - Name of database
+			* @param string - Name of the table
+			* @param string - name of row
+			* @return undefined
+			*/
+			database.newRow = function(database, table, row)
 			{
-					//TO DO: CHECK IF ROW ALREADY EXISTS AND ENSURE TABLR EXISTS OR CLOSE AND THROW ERROR
-					var retrievedObject = JSON.parse(localStorage.getItem(table));
-						retrievedObject[row] = "";
-						localStorage.setItem(table, JSON.stringify(retrievedObject));
+					var retrievedObject = JSON.parse(localStorage.getItem(database));
+					var tableContent = retrievedObject[table];
+					if(tableContent[row]){
+						alert('That Table Row Already Exists!');
+						return;
+					}
+
+					tableContent[row] = [];
+					retrievedObject[table] = tableContent;
+					localStorage.setItem(database, JSON.stringify(retrievedObject));
+					_checkTableIntegrity(database, table);
 			}
 
-			var getTableValue = function(table, row)
-			{
-				//TO DO: Implement check to see if table and row exists
-				var retrievedObject = JSON.parse(localStorage.getItem(table));
-				return retrievedObject[row]
-			}
+			/**
+			* Selects data from a row that satisfies a particular pice of data
+			* @param string - Name of database
+			* @param string - Name of the table
+			* @param string - value to query against
+			* @param string - row to limit search to
+			* @return object
+			*/
+			database.select = function(database, table, row, value){
+				var retrievedObject = JSON.parse(localStorage.getItem(database));
+				var tableContent = retrievedObject[table];
+				returnContent = Object();
+				console.log(tableContent);
 
-			var checkTableExists = function(database, table)
-			{
-				var retrievedObject = localStorage.getItem(database);
-				retrievedObject = JSON.parse(retrievedObject);
+				// var returnContent = tableContent.filter(function(item){
+				// 	return item == value;
+				// });
 
-				if(!retrievedObject[table]){return false;}
-				else{return true;}
+				return returnContent;
 			}
 
 			var getByDate = function(database, date)
 			{
-				var todayItem = new Object()
+				var todayItem = new Object();
 
 				var retrievedObject = localStorage.getItem(database);
 				retrievedObject = JSON.parse(retrievedObject);
@@ -200,6 +218,23 @@
 					}
 				}
 				return todayItem;
+			}
+
+
+			var getTableValue = function(table, row)
+			{
+				//TO DO: Implement check to see if table and row exists
+				var retrievedObject = JSON.parse(localStorage.getItem(table));
+				return retrievedObject[row]
+			}
+
+			var checkTableExists = function(database, table)
+			{
+				var retrievedObject = localStorage.getItem(database);
+				retrievedObject = JSON.parse(retrievedObject);
+
+				if(!retrievedObject[table]){return false;}
+				else{return true;}
 			}
 
 
@@ -276,13 +311,15 @@
 
 	// var today = dataBase.today('workouts')
 	// console.log(today);
-	 dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","315"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","400"]]);
 		// var item = dataBase.test('workouts', 'deads');
 	// var item = dataBase.getTable('workouts', 'deads');
 	// console.log(item);
-	var retrievedObject = localStorage.getItem("workouts");
-						retrievedObject = JSON.parse(retrievedObject);
-				 		console.log(retrievedObject);
+	// dataBase.newRow('workouts', 'deads', 'reps');
+	var item = dataBase.select('workouts', 'deads', "weight", 400);
+	// var retrievedObject = localStorage.getItem("workouts");
+	// 					retrievedObject = JSON.parse(retrievedObject);
+	// 			 		console.log(retrievedObject);
 
 
 
