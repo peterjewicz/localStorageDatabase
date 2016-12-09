@@ -4,6 +4,10 @@
 
 			var database = {}; //main object returned;
 
+			//vars that control various functionality in the app
+			//change these based on your preferences
+			database.dateName = "date"; //used as default for get by date and get today's date functions
+			database.dateFormat = "mm/dd/yyy"; //TODO create helper function to format dates using this standard
 
 			/**
 			 * Creates an object in localstorage to represent a database
@@ -29,6 +33,11 @@
 			 * @return undefined
 			 */
 			 database.newTable = function(database, name, options){
+ 			 		if(_checkTableExists(database, name)){
+						console.error('Table already exists, please delete to prevent data loss');
+						return;
+					}
+
 				 	var loopVar = 0;
 				 	var dataBaseArray = new Object();
 
@@ -107,8 +116,7 @@
 				var retrievedObject = JSON.parse(localStorage.getItem(database));
 				var tableContent = retrievedObject[table];
 
-				//var rows = Object.keys(table).length;
-				var highestRow = -1; //first item will always be bigger preventing an issues
+				var highestRow = -1; //first item will always be bigger preventing any issues
 
 				for (var property in tableContent) {
 					var propLength = tableContent[property].length;
@@ -163,17 +171,32 @@
 			database.select = function(database, table, row, value){
 				var retrievedObject = JSON.parse(localStorage.getItem(database));
 				var tableContent = retrievedObject[table];
+				var rowContent = tableContent[row];
 				returnContent = Object();
 				console.log(tableContent);
+				var matchedElements = [];
 
-				// var returnContent = tableContent.filter(function(item){
-				// 	return item == value;
-				// });
+				for(var x = 0; x < rowContent.length; x++){
+					if(rowContent[x] == value){
+						matchedElements.push(x);
+					}
+				}
+
+				//itterate through object properties
+				//for each array in the properties pop off any elements that aren't matched in the matched elements array
+				//return the newly trimmed array that only hold elements that are equal to the matching value
 
 				return returnContent;
 			}
 
-			var getByDate = function(database, date)
+			/**
+			* Special helper function that database.select() all tables in a database for a given date.
+			* Field is configurable in object vars - default is 'date'
+			* @param string - Name of database
+			* @param string - date to query in string format
+			* @return object
+			*/
+			database.getByDate = function(database, date)
 			{
 				var todayItem = new Object();
 
@@ -220,90 +243,42 @@
 				return todayItem;
 			}
 
-
-			var getTableValue = function(table, row)
-			{
-				//TO DO: Implement check to see if table and row exists
-				var retrievedObject = JSON.parse(localStorage.getItem(table));
-				return retrievedObject[row]
-			}
-
-			var checkTableExists = function(database, table)
+			/**
+			* Helper function to determine if a table already exists in a given database to prevent date overriding
+			* @param string - Name of database
+			* @param string - Name of table
+			* @return bool
+			*/
+			function _checkTableExists (database, table)
 			{
 				var retrievedObject = localStorage.getItem(database);
 				retrievedObject = JSON.parse(retrievedObject);
 
-				if(!retrievedObject[table]){return false;}
-				else{return true;}
-			}
-
-
-			var getToday = function(database, table) //table is optional
-			{
-				var todayItem = new Object()
-				var today = new Date();
-				var dd = today.getDate();
-				var mm = today.getMonth()+1; //January is 0!
-				var yy = today.getFullYear();
-				today = mm + "/" + dd + "/" + yy;
-
-
-				var retrievedObject = localStorage.getItem(database);
-				retrievedObject = JSON.parse(retrievedObject);
-
-				for(var property in retrievedObject)//itterates through tables
-				{
-
-
-
-					// for(var tablePropery in retrievedObject[property] )//itterates through table properties
-					// {
-					// 	console.log(tablePropery);
-					// }
-
-					var dateArray = retrievedObject[property].date;
-
-					var arraySize = dateArray.length
-
-					for(var x = 0; x < arraySize; x++)
-					{
-						if(dateArray[x] == today)
-						{
-
-							if(!todayItem[property])
-							{
-								todayItem[property] = new Object();
-								for(var tablePropery in retrievedObject[property] )//itterates through table properties
-								{
-
-									todayItem[property][tablePropery] = Array();
-
-								}
-
-
-							}
-
-							for(var tablePropery in retrievedObject[property] )//itterates through table properties
-							{
-
-
-									todayItem[property][tablePropery].push(retrievedObject[property][tablePropery][x]); // say that 10 times fast
-							}
-
-						}
-
-					}
+				if(!retrievedObject[table]){
+					return false;
 				}
-				return todayItem;
+				else{
+					return true;
+				}
 			}
 
 
+			/**
+			* Special helper function identical to getByDate but only works for the current date
+			* Uses dateFormt property of database object to determine the form of date to query against
+			* @param string - Name of database
+			* @return object
+			*/
+			database.getToday = function(database, table) //table is optional
+			{
+				//TODO this
+			}
 
-			   return database;
+	 return database;
 	})()
 
 	//dataBase.create("workouts");  //creates an object(database) with the given name
-	//dataBase.newTable("workouts" ,"bench", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
+	dataBase.newTable("workouts" ,"fun", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
 
 	//dataBase.setValues("workouts", "deads", {date:"10/19/2015"}, {weight: 255}, {reps:5}); // sets values in table - sent in an {attribute:value} format
 	//  test = dataBase.checkTable('workouts', 'benchs');
@@ -316,7 +291,7 @@
 	// var item = dataBase.getTable('workouts', 'deads');
 	// console.log(item);
 	// dataBase.newRow('workouts', 'deads', 'reps');
-	var item = dataBase.select('workouts', 'deads', "weight", 400);
+	//var item = dataBase.select('workouts', 'deads', "weight", 400);
 	// var retrievedObject = localStorage.getItem("workouts");
 	// 					retrievedObject = JSON.parse(retrievedObject);
 	// 			 		console.log(retrievedObject);
