@@ -1,0 +1,4 @@
+Readme
+
+A simple psuedo database for using local storage. Gives the ability to create tables and rows to help maintain
+order when using the local storage features of javascript.
