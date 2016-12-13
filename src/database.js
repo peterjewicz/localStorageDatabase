@@ -81,6 +81,7 @@ var dataBase = (function(){
                        retrievedObject[table][property].push(value);
                    loopVar++;
                }
+
                localStorage.setItem(database, JSON.stringify(retrievedObject));
                // TODO: Check that all rows have been filled _checkTableIntegrity
                 _checkTableIntegrity(database, table)
@@ -170,21 +171,24 @@ var dataBase = (function(){
            var retrievedObject = JSON.parse(localStorage.getItem(database));
            var tableContent = retrievedObject[table];
            var rowContent = tableContent[row];
-           returnContent = Object();
-           console.log(tableContent);
            var matchedElements = [];
 
+           //creates an array of indexs that don't
            for(var x = 0; x < rowContent.length; x++){
-               if(rowContent[x] == value){
+               if(rowContent[x] != value){
                    matchedElements.push(x);
                }
            }
 
-           //itterate through object properties
-           //for each array in the properties pop off any elements that aren't matched in the matched elements array
-           //return the newly trimmed array that only hold elements that are equal to the matching value
-
-           return returnContent;
+           for(var property in tableContent){
+             console.log(property);
+             for(var x = 0; x < matchedElements.length; x++){
+               //TODO Test this next line some more. It works right now, but I feel it could behave weird for edge or non trival cases
+               tableContent[property].splice((matchedElements[x]) - x, 1); //reduce the index by x as the array's size change
+               console.log(tableContent);
+             }
+           }
+           return tableContent;
        }
 
        /**
@@ -201,43 +205,6 @@ var dataBase = (function(){
            var retrievedObject = localStorage.getItem(database);
            retrievedObject = JSON.parse(retrievedObject);
 
-           for(var property in retrievedObject)//itterates through tables
-           {
-
-
-               var dateArray = retrievedObject[property].date;
-
-               var arraySize = dateArray.length
-
-               for(var x = 0; x < arraySize; x++)
-               {
-                   if(dateArray[x] == date)
-                   {
-
-                       if(!todayItem[property])
-                       {
-                           todayItem[property] = new Object();
-                           for(var tablePropery in retrievedObject[property] )//itterates through table properties
-                           {
-
-                               todayItem[property][tablePropery] = Array();
-
-                           }
-
-
-                       }
-
-                       for(var tablePropery in retrievedObject[property] )//itterates through table properties
-                       {
-
-
-                               todayItem[property][tablePropery].push(retrievedObject[property][tablePropery][x]); // say that 10 times fast
-                       }
-
-                   }
-
-               }
-           }
            return todayItem;
        }
 

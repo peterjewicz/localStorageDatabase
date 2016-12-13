@@ -2,24 +2,30 @@
 <h3>This File is for testing</h3>
 <script>
 
-	// dataBase.create("workouts");  //creates an object(database) with the given name
-	// dataBase.newTable("workouts" ,"fun", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
+	//dataBase.create("workouts");  //creates an object(database) with the given name
+	 //dataBase.newTable("workouts" ,"deads", "date","weight", "reps");  //creates a table with the given rows - these currently cannot be changed
 
-	//dataBase.setValues("workouts", "deads", {date:"10/19/2015"}, {weight: 255}, {reps:5}); // sets values in table - sent in an {attribute:value} format
+	//dataBase.setValues("workouts", "deads", {date:"10/20/2015"}, {weight: 300}, {reps:5});
 	//  test = dataBase.checkTable('workouts', 'benchs');
 
 
 	// var today = dataBase.today('workouts')
 	// console.log(today);
-	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","400"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","350"], ["reps","10"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","350"], ["reps","10"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","350"], ["reps","10"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "11/12/2016"], ["weight","350"], ["reps","10"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "1/4/2016"], ["weight","400"], ["reps","10"]]);
+	//  dataBase.setValues('workouts', 'deads', [["date", "1/4/2016"], ["weight","400"], ["reps","10"]]);
 		// var item = dataBase.test('workouts', 'deads');
 	// var item = dataBase.getTable('workouts', 'deads');
 	// console.log(item);
 	// dataBase.newRow('workouts', 'deads', 'reps');
-	//var item = dataBase.select('workouts', 'deads', "weight", 400);
+	var item = dataBase.select('workouts', 'deads', "weight", 400);
 	var retrievedObject = localStorage.getItem("workouts");
 						retrievedObject = JSON.parse(retrievedObject);
 				 		console.log(retrievedObject);
+	console.log(item);
 
 
 
