@@ -10,7 +10,7 @@ var dataBase = (function(){
        /**
         * Creates an object in localstorage to represent a database
         * @param string - Name of database
-        * @return undefinec
+        * @return undefined
         */
        database.create = function(name){
            if(localStorage.getItem(name))
