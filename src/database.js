@@ -160,7 +160,7 @@ var dataBase = (function(){
        }
 
        /**
-       * Selects data from a row that satisfies a particular pice of data
+       * Selects data from a row that satisfies a particular piece of data
        * @param string - Name of database
        * @param string - Name of the table
        * @param string - value to query against
@@ -181,11 +181,9 @@ var dataBase = (function(){
            }
 
            for(var property in tableContent){
-             console.log(property);
              for(var x = 0; x < matchedElements.length; x++){
                //TODO Test this next line some more. It works right now, but I feel it could behave weird for edge or non trival cases
                tableContent[property].splice((matchedElements[x]) - x, 1); //reduce the index by x as the array's size change
-               console.log(tableContent);
              }
            }
            return tableContent;
@@ -201,9 +199,13 @@ var dataBase = (function(){
        database.getByDate = function(database, date)
        {
            var todayItem = new Object();
-
            var retrievedObject = localStorage.getItem(database);
            retrievedObject = JSON.parse(retrievedObject);
+           //for each row in the database do this to create teh objects
+           for(table in retrievedObject){
+               var returnVal = database.select(database, table, database.dateName, queryDate)
+               todayItem[table] = returnVal;
+           }
 
            return todayItem;
        }
@@ -234,9 +236,24 @@ var dataBase = (function(){
        * @param string - Name of database
        * @return object
        */
-       database.getToday = function(database, table) //table is optional
+       database.getToday = function(database)
        {
-           //TODO this
+           var todayItem = new Object();
+           var retrievedObject = localStorage.getItem(database);
+           retrievedObject = JSON.parse(retrievedObject);
+           var currentDate = new Date();
+           var month = currentDate.getMonth() + 1;
+           var day = currentDate.getDate();
+           var year = currentDate.getFullYear();
+
+           currentDate = month + '/' + day + '/' + year;
+           for(table in retrievedObject){
+               var returnVal = this.select(database, table, this.dateName, currentDate);
+               todayItem[table] = returnVal;
+           }
+
+           return todayItem;
+
        }
 
 return database;
