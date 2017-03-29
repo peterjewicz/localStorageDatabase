@@ -93,12 +93,13 @@ var dataBase = (function(){
         * @param string - Name of the table
         * @return object
         */
-       database.getTable = function(database, table)
-       {
-           var retrievedObject = JSON.parse(localStorage.getItem(database));
-           var table = retrievedObject[table];
-           return table;
-       }
+        database.getTable = function(database, table)
+        {
+            table = table.toLowerCase();
+            var retrievedObject = JSON.parse(localStorage.getItem(database));
+            var table = retrievedObject[table];
+            return table;
+        }
 
 
        /**
@@ -112,6 +113,7 @@ var dataBase = (function(){
        */
        function _checkTableIntegrity(database, table)
        {
+           table = table.toLowerCase();
            var retrievedObject = JSON.parse(localStorage.getItem(database));
            var tableContent = retrievedObject[table];
 
