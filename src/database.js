@@ -10,7 +10,7 @@ var dataBase = (function(){
        /**
         * Creates an object in localstorage to represent a database
         * @param string - Name of database
-        * @return undefined
+        * @return void
         */
        database.create = function(name){
            if(localStorage.getItem(name))
@@ -27,12 +27,12 @@ var dataBase = (function(){
         * Adds an object to an established database object to act as a table in that database
         * @param string - Name of database to add to
         * @param string - Name of the table to Add
-        * @param string- fields names of the table can do as many as needed.
-        * @return undefined
+        * @param string- fields names of the table can add as many as needed at once.
+        * @return void
         */
         database.newTable = function(database, name, options){
                if(_checkTableExists(database, name)){
-                   console.error('Table already exists, please delete to prevent data loss');
+                   console.error('Table already exists.');
                    return;
                }
 
@@ -40,7 +40,7 @@ var dataBase = (function(){
                var dataBaseArray = new Object();
 
                var options = Array.prototype.slice.call(arguments, 0); // Holds a list of all the arguments passed
-               var database = options.shift();//Removed the first thre elements which is database that is being called
+               var database = options.shift();//Removed the first element which is database that is being called
                var tableName = options.shift(); //assign table name and remove from list of options
                tableName = tableName.toLowerCase();
                size = options.length;
@@ -50,7 +50,7 @@ var dataBase = (function(){
                var retrievedObject = localStorage.getItem(database);
                retrievedObject = JSON.parse(retrievedObject);
 
-             retrievedObject[tableName] = Object();
+               retrievedObject[tableName] = Object();
 
                while(loopVar < size){
                    var prop = options[loopVar];
@@ -83,7 +83,7 @@ var dataBase = (function(){
                }
 
                localStorage.setItem(database, JSON.stringify(retrievedObject));
-               // TODO: Check that all rows have been filled _checkTableIntegrity
+               //Fill in any unadded rows
                 _checkTableIntegrity(database, table)
            }
 
@@ -203,7 +203,7 @@ var dataBase = (function(){
            var todayItem = new Object();
            var retrievedObject = localStorage.getItem(database);
            retrievedObject = JSON.parse(retrievedObject);
-           //for each row in the database do this to create teh objects
+           //for each row in the database do this to create the objects
            for(table in retrievedObject){
                var returnVal = database.select(database, table, database.dateName, queryDate)
                todayItem[table] = returnVal;
@@ -214,6 +214,7 @@ var dataBase = (function(){
 
        /**
        * Helper function to determine if a table already exists in a given database to prevent date overriding
+       * and to help retrun useful messages
        * @param string - Name of database
        * @param string - Name of table
        * @return bool
@@ -253,9 +254,7 @@ var dataBase = (function(){
                var returnVal = this.select(database, table, this.dateName, currentDate);
                todayItem[table] = returnVal;
            }
-
            return todayItem;
-
        }
 
 return database;
